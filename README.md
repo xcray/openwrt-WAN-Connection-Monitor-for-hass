@@ -29,4 +29,4 @@ mosquitto_pub -h mqtt_broker -t openwrt/wan-ip -m "{\"wan-ip\":\""$wanip"\"}"
 ```
 last 2 lines are not essential.
 
-* The topics should match between the script and the configuration.*
+***The topics should match between the script and the configuration.***
