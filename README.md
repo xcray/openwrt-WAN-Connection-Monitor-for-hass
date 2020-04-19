@@ -22,7 +22,7 @@ mqtt:
 #### script under /etc/hotplug.d/ directory of OpenWRT router:
 ```
 #!/bin/sh
-[ "$INTERFACE" = "pppoe-wan" ] || exit 0
+[ "$INTERFACE" = "wan" ] || exit 0
 mosquitto_pub -h mqtt_broker -t openwrt/pppoe-wan -m "$ACTION"
 wanip=$(ifconfig pppoe-wan | awk '/inet addr/{print substr($2,6)}')
 mosquitto_pub -h mqtt_broker -t openwrt/wan-ip -m "{\"wan-ip\":\""$wanip"\"}" 
