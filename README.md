@@ -11,7 +11,7 @@ binary_sensor:
     device_class: connectivity
     json_attributes_topic: "openwrt/wan-ip"
 ```
-last 3 lines are not essential.
+last 2 lines are not essential.
 Of cause, there should be one mqtt broker in the configuration:
 ```
 mqtt:
