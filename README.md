@@ -7,8 +7,6 @@ https://openwrt.org/docs/guide-user/base-system/hotplug
 binary_sensor:
   - platform: mqtt
     state_topic: "openwrt/pppoe-wan"
-    payload_on: "ifup"
-    payload_off: "ifdown"
     name: internet
     device_class: connectivity
     json_attributes_topic: "openwrt/wan-ip"
@@ -17,16 +15,19 @@ last 3 lines are not essential.
 Of cause, there should be one mqtt broker in the configuration:
 ```
 mqtt:
-  broker: mqtt_broker #your own broker address
+  broker: x.x.x.x #your own broker address
 ```
 #### script under /etc/hotplug.d/ directory of OpenWRT router:
 ```
 #!/bin/sh
 [ "$INTERFACE" = "wan" ] || exit 0
-mosquitto_pub -h mqtt_broker -t openwrt/pppoe-wan -m "$ACTION"
-wanip=$(ifconfig pppoe-wan | awk '/inet addr/{print substr($2,6)}')
-mosquitto_pub -h mqtt_broker -t openwrt/wan-ip -m "{\"wan-ip\":\""$wanip"\"}" 
+[ "$ACTION" = "ifdown" ] && mosquitto_pub -h x.x.x.x -t openwrt/pppoe-wan -m OFF
+[ "$ACTION" = "ifup" ] && mosquitto_pub -h x.x.x.x -t openwrt/pppoe-wan -m ON
+[ "$ACTION" = "ifupdate" ] && (
+    wanip=$(ifconfig pppoe-wan | awk '/inet addr/{print substr($2,6)}')
+    mosquitto_pub -h x.x.x.x -t openwrt/wan-ip -m "{\"wan-ip\":\""$wanip"\"}" )
 ```
-last 2 lines are not essential.
+last 3 lines are not essential.
 
 ***The topics should match between the script and the configuration.***
+***Don't forget to replace x.x.x.x with right address***
